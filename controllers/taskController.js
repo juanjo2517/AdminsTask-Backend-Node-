@@ -44,7 +44,7 @@ exports.getTaskProject = async (req, res) => {
     //Extraer proyecto
     try {
 
-        const { project } = req.body;
+        const { project } = req.query;
 
         const existProject = await Project.findById(project);
         if(!existProject){
@@ -57,7 +57,7 @@ exports.getTaskProject = async (req, res) => {
         }
 
         //Obtener tareas por proyecto
-        const tasks = await Task.find({project});
+        const tasks = await Task.find({project}).sort({ dateRegister: -1 });
         res.json({tasks});
 
 
@@ -92,15 +92,9 @@ exports.updateTask = async (req, res) => {
         }
 
         const newTask = { };
-
-        if(name){
-            newTask.name = name;
-        }
-
-        if(status){
-            newTask.status = status; 
-        }
-
+        newTask.name = name;
+        newTask.status = status; 
+        
         task = await Task.findByIdAndUpdate(
             {_id: req.params.id},
             {$set: newTask},
@@ -118,7 +112,7 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
     try {
-        const { project } = req.body;
+        const { project } = req.query;
 
         //Si existe proyeto
         const existProject = await Project.findById(project);
