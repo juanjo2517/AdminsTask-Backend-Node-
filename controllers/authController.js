@@ -19,7 +19,7 @@ exports.authenticatedUser = async (req, res) => {
         let user = await User.findOne({email});
         if(!user){
             return res.status(400)
-            .json({msg: `No existe un usuario con el Correo ${email}`});
+            .json({msg: 'No existe un usuario con este correo'});
         }
 
         const correctPassword = await bcryptjs.compare(password, user.password);
